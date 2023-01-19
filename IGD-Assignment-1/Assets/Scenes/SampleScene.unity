@@ -137,15 +137,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 971bd07e11a3c0045b77fa7e068cc151, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 77.77115
+      value: 4.9
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 971bd07e11a3c0045b77fa7e068cc151, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 971bd07e11a3c0045b77fa7e068cc151, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 27.462738
+      value: 14.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 971bd07e11a3c0045b77fa7e068cc151, type: 3}
       propertyPath: m_LocalRotation.w
@@ -491,6 +491,25 @@ MonoBehaviour:
   smoothingValue: 0.125
   offset: {x: 0, y: 2, z: -10}
   rotation: {x: 0, y: 0, z: 0, w: 0}
+  lookLeft: 0
+  lookRight: 0
+--- !u!1 &1057443177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 971bd07e11a3c0045b77fa7e068cc151, type: 3}
+  m_PrefabInstance: {fileID: 220100871}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1057443179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057443177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23d3e7a02ca05454b9aa9ff53c1d89a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576918345
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,11 +624,9 @@ MonoBehaviour:
   playerMaxSpeed: 3
   playerSpeedIncrement: 1
   playerMinSpeed: 1
+  jumpHoldDuration: 0.2
   playerJumpForce: 10
   gravityForce: 200
-  lookLeft: 0
-  lookRight: 0
-  jumpHoldDuration: 0.2
 --- !u!136 &2018914251
 CapsuleCollider:
   m_ObjectHideFlags: 0

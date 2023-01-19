@@ -26,9 +26,16 @@ public class playerMovement : MonoBehaviour
     private float groundSphereRadius;
     private Vector3 groundSpherePos;
 
+    //camera variables
+    Camera cameraMain;
+    Vector3 cameraForward;
+    Vector3 cameraRight;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        cameraMain = Camera.main;
         movementDirection = new Vector3(0, 0, 0);
         isGrounded = true;
         playerSpeed = playerMinSpeed;
@@ -40,7 +47,7 @@ public class playerMovement : MonoBehaviour
     {
         Physics.gravity = new Vector3(0, -gravityForce, 0);
 
-        movement();
+        Movement();
        
 
     }
@@ -61,9 +68,9 @@ public class playerMovement : MonoBehaviour
         Gizmos.DrawSphere(groundSpherePos, groundSphereRadius);
     }
 
-    public void jump()
+    public void Jump()
     {
-        groundSphereCast();
+        GroundSphereCast(); //used to determine whether the player is on the ground or not
 
         if (isMoving)
             movementDirection = new Vector3(xMove, 0, zMove).normalized;    //Determines the direction the input is pointing
@@ -87,10 +94,16 @@ public class playerMovement : MonoBehaviour
             playerRigidbody.useGravity = true;
     }
 
-    public void movement()
+    public void Movement()
     {
         xMove = Input.GetAxisRaw("Horizontal"); // d key changes value to 1, a key changes value to -1
         zMove = Input.GetAxisRaw("Vertical"); // w key changes value to 1, s key changes value to -1
+        
+        //gets the direction of the camera
+        cameraForward = cameraMain.transform.forward;
+        cameraRight = cameraMain.transform.right;
+
+        var desiredMoveDirection = cameraForward * zMove + cameraRight * xMove;
 
         if (xMove != 0 || zMove != 0)
             isMoving = true;
@@ -114,12 +127,12 @@ public class playerMovement : MonoBehaviour
                 playerSpeed = playerMinSpeed;   //prevents going under minimum speed
         }
 
-        playerRigidbody.velocity += new Vector3(xMove, 0, zMove) * playerSpeed; //updates speed by adding to velocity
+        playerRigidbody.velocity += desiredMoveDirection * playerSpeed; //updates speed by adding to velocity
 
-        jump();
+        Jump();
     }
 
-    public void groundSphereCast()
+    public void GroundSphereCast()
     {
         groundSphereRadius = this.GetComponent<CapsuleCollider>().radius * 1.9f;    //radius of the capsule collider, but a little bigger
         groundSpherePos = transform.position + Vector3.down * (groundSphereRadius * 1.9f);  //the position of the collider, below the player's feet
