@@ -68,6 +68,14 @@ public class playerMovement : MonoBehaviour
         Gizmos.DrawSphere(groundSpherePos, groundSphereRadius);
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.gameObject.name == "banana_obj")
+        {
+            Destroy(other.gameObject);
+        }
+    }
+
     public void Jump()
     {
         GroundSphereCast(); //used to determine whether the player is on the ground or not
