@@ -25,12 +25,14 @@ public class playerMovement : MonoBehaviour
     public float gravityForce;  //determines fall speed
     private float groundSphereRadius;
     private Vector3 groundSpherePos;
+    private Vector3 desiredMoveDirection;
 
     //camera variables
     Camera cameraMain;
     Vector3 cameraForward;
     Vector3 cameraRight;
 
+    public string collectableTag;
 
     // Start is called before the first frame update
     void Start()
@@ -70,7 +72,7 @@ public class playerMovement : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.transform.gameObject.name == "banana_obj")
+        if (other.transform.gameObject.tag == collectableTag)
         {
             Destroy(other.gameObject);
         }
@@ -81,7 +83,11 @@ public class playerMovement : MonoBehaviour
         GroundSphereCast(); //used to determine whether the player is on the ground or not
 
         if (isMoving)
-            movementDirection = new Vector3(xMove, 0, zMove).normalized;    //Determines the direction the input is pointing
+        {
+            movementDirection = desiredMoveDirection;    //Determines the direction the input is pointing
+            movementDirection.y = 0;
+        }
+
 
         if (isGrounded)
         {   
@@ -111,7 +117,7 @@ public class playerMovement : MonoBehaviour
         cameraForward = cameraMain.transform.forward;
         cameraRight = cameraMain.transform.right;
 
-        var desiredMoveDirection = cameraForward * zMove + cameraRight * xMove;
+        desiredMoveDirection = cameraForward * zMove + cameraRight * xMove;
 
         if (xMove != 0 || zMove != 0)
             isMoving = true;
@@ -142,8 +148,8 @@ public class playerMovement : MonoBehaviour
 
     public void GroundSphereCast()
     {
-        groundSphereRadius = this.GetComponent<CapsuleCollider>().radius * 1.9f;    //radius of the capsule collider, but a little bigger
-        groundSpherePos = transform.position + Vector3.down * (groundSphereRadius * 1.9f);  //the position of the collider, below the player's feet
+        groundSphereRadius = this.GetComponent<CapsuleCollider>().radius * 0.9f;    //radius of the capsule collider, but a little bigger
+        groundSpherePos = transform.position + (Vector3.down * .8f) * (groundSphereRadius * 0.9f);  //the position of the collider, below the player's feet
         isGrounded = Physics.CheckSphere(groundSpherePos, groundSphereRadius, LayerMask.GetMask("Ground")); //determines if the player is one any object with the layer ground
     }
 }
