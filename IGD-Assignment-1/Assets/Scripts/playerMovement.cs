@@ -34,6 +34,10 @@ public class playerMovement : MonoBehaviour
 
     public string collectableTag;
 
+    public GameObject jumpingModel;
+    public GameObject standingModel;
+    public GameObject currentModel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,13 +45,18 @@ public class playerMovement : MonoBehaviour
         movementDirection = new Vector3(0, 0, 0);
         isGrounded = true;
         playerSpeed = playerMinSpeed;
-        playerRigidbody = GetComponent<Rigidbody>();
+        currentModel = standingModel;
+        //playerRigidbody = this.GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         Physics.gravity = new Vector3(0, -gravityForce, 0);
+
+        ChangeModel();
+        playerRigidbody = this.GetComponent<Rigidbody>();
 
         Movement();
        
@@ -78,6 +87,23 @@ public class playerMovement : MonoBehaviour
         }
     }
 
+    public void ChangeModel()
+    {
+        if (!isGrounded)
+        {
+            standingModel.transform.position = jumpingModel.transform.position;
+
+            jumpingModel.SetActive(true);
+            standingModel.SetActive(false);
+            currentModel = jumpingModel;
+        } else
+        {
+            jumpingModel.transform.position = standingModel.transform.position;
+            jumpingModel.SetActive(false);
+            standingModel.SetActive(true);
+            currentModel = standingModel;
+        }
+    }
     public void Jump()
     {
         GroundSphereCast(); //used to determine whether the player is on the ground or not
@@ -89,23 +115,32 @@ public class playerMovement : MonoBehaviour
         }
 
 
-        if (isGrounded)
-        {   
-            lastGroundedTime = Time.time;   //the time you left the ground
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(movementDirection), Time.deltaTime * 40f);   //Resets player rotation
-        }
-        else
-            transform.Rotate(Time.deltaTime * 2000, 0, 0, Space.Self);  //Causes player to SPIN
+ 
 
         //once you leave the ground, you can influence the height of your jump by 'jumpHoldDuration' seconds to allow for variable height
         if (Input.GetKey(KeyCode.Space) && Time.time < lastGroundedTime + jumpHoldDuration)
         {
             playerRigidbody.useGravity = false; //jumping ignores the influence of gravity for 'jumpHoldDuration' time
             playerRigidbody.velocity += new Vector3(0, playerJumpForce, 0);
+            isGrounded = false;
 
         }
         else
             playerRigidbody.useGravity = true;
+
+
+        if (isGrounded)
+        {
+            lastGroundedTime = Time.time;   //the time you left the ground
+            currentModel.transform.rotation = Quaternion.Slerp(currentModel.transform.rotation, Quaternion.LookRotation(movementDirection), Time.deltaTime * 40f);   //Resets player rotation
+        }
+        else
+        {
+            currentModel.transform.Rotate(Time.deltaTime * 200, 0, 0, Space.Self);  //Causes player to SPIN
+
+        }
+            
+
     }
 
     public void Movement()
@@ -136,7 +171,7 @@ public class playerMovement : MonoBehaviour
         {
             // Decreases the speed by an incremental amount until reaching minimum starting speed
             if (playerSpeed > playerMinSpeed)
-                playerSpeed -= playerSpeedIncrement * Time.deltaTime;
+                playerSpeed = playerMinSpeed;
             else
                 playerSpeed = playerMinSpeed;   //prevents going under minimum speed
         }
@@ -148,8 +183,9 @@ public class playerMovement : MonoBehaviour
 
     public void GroundSphereCast()
     {
-        groundSphereRadius = this.GetComponent<CapsuleCollider>().radius * 0.9f;    //radius of the capsule collider, but a little bigger
-        groundSpherePos = transform.position + (Vector3.down * .8f) * (groundSphereRadius * 0.9f);  //the position of the collider, below the player's feet
+        groundSphereRadius = currentModel.GetComponent<CapsuleCollider>().height;    //radius of the capsule collider, but a little bigger
+        groundSphereRadius = .5f;
+        groundSpherePos = currentModel.transform.position + (Vector3.down * 1.3f) ;  //the position of the collider, below the player's feet
         isGrounded = Physics.CheckSphere(groundSpherePos, groundSphereRadius, LayerMask.GetMask("Ground")); //determines if the player is one any object with the layer ground
     }
 }
