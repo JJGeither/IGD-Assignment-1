@@ -136,7 +136,7 @@ public class playerMovement : MonoBehaviour
         }
         else
         {
-            currentModel.transform.Rotate(Time.deltaTime * 200, 0, 0, Space.Self);  //Causes player to SPIN
+            currentModel.transform.Rotate(Time.deltaTime * 2000, 0, 0, Space.Self);  //Causes player to SPIN
 
         }
             
@@ -145,6 +145,9 @@ public class playerMovement : MonoBehaviour
 
     public void Movement()
     {
+
+
+
         xMove = Input.GetAxisRaw("Horizontal"); // d key changes value to 1, a key changes value to -1
         zMove = Input.GetAxisRaw("Vertical"); // w key changes value to 1, s key changes value to -1
         
@@ -171,7 +174,7 @@ public class playerMovement : MonoBehaviour
         {
             // Decreases the speed by an incremental amount until reaching minimum starting speed
             if (playerSpeed > playerMinSpeed)
-                playerSpeed = playerMinSpeed;
+                playerSpeed -= playerSpeedIncrement * Time.deltaTime * 2;
             else
                 playerSpeed = playerMinSpeed;   //prevents going under minimum speed
         }
