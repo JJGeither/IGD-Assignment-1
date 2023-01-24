@@ -12,7 +12,7 @@ public class playerMovement : MonoBehaviour
     public float playerSpeedIncrement;
     public float playerMinSpeed;
 
-
+    private int ringCount;
 
     //vertical movement variables
     float xMove, zMove;
@@ -46,6 +46,7 @@ public class playerMovement : MonoBehaviour
         isGrounded = true;
         playerSpeed = playerMinSpeed;
         currentModel = standingModel;
+        ringCount = 0;
         //playerRigidbody = this.GetComponent<Rigidbody>();
 
     }
@@ -65,11 +66,16 @@ public class playerMovement : MonoBehaviour
 
     void OnGUI()
     {
+        GUIStyle guiStyle = new GUIStyle();
+        guiStyle.fontSize = 30;
+        guiStyle.normal.textColor = Color.yellow;
 
-        GUI.Label(new Rect(10, 10, 100, 20), "Speed: " + playerSpeed);
-        GUI.Label(new Rect(10, 40, 100, 20), "X Input: " + Input.GetAxisRaw("Horizontal"));
-        GUI.Label(new Rect(10, 80, 100, 20), "Y Input: " + Input.GetAxisRaw("Vertical"));
-        GUI.Label(new Rect(10, 120, 100, 20), "Grounded: " + isGrounded);
+        GUIStyle ringStyle = new GUIStyle();
+        ringStyle.fontSize = 30;
+        ringStyle.normal.textColor = Color.white;
+
+        GUI.Label(new Rect(10, 10, 100, 20), "Rings ", guiStyle);
+        GUI.Label(new Rect(130, 10, 100, 20),"" + ringCount, ringStyle);
     }
 
     void OnDrawGizmosSelected()
@@ -84,6 +90,7 @@ public class playerMovement : MonoBehaviour
         if (other.transform.gameObject.tag == collectableTag)
         {
             Destroy(other.gameObject);
+            ringCount++;
         }
     }
 
